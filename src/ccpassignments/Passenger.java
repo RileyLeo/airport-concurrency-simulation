@@ -19,7 +19,8 @@ public class Passenger extends Thread {
     }
 
     private void disembarkPassengers() {
-        int rand = (int) ((Math.random() * 49) + 1);
+        int rand = (int) ((Math.random() * (11) + 40));
+        Report.disembarkPassengerCount.set(plane.index, rand);
         System.out.println(ANSI_GREEN_BACKGROUND + "Passenger Thread: There are " + rand + " passengers disembarking " + plane.getPlaneName() + "." + ANSI_RESET);
         for (int i = 1; i <= rand; i++) {
             try {
@@ -33,7 +34,8 @@ public class Passenger extends Thread {
     }
 
     private void embarkPassengers() {
-        int rand = (int) ((Math.random() * 49) + 1);
+        int rand = (int) ((Math.random() * (11) + 40));
+        Report.embarkPassengerCount.set(plane.index, rand);
         System.out.println(ANSI_GREEN_BACKGROUND + "Passenger Thread: There are " + rand + " passengers boarding " + plane.getPlaneName() + "." + ANSI_RESET);
         for (int i = 1; i <= rand; i++) {
             try {
