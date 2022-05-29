@@ -1,6 +1,7 @@
 package ccpassignments;
 
 import java.util.Date;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class PlaneGenerator extends Thread {
@@ -20,7 +21,7 @@ public class PlaneGenerator extends Thread {
             plane.setPlaneName("Plane " + i);
             threadPlane.start();
             try {
-                Thread.sleep(5000);
+                Thread.sleep(new Random().nextInt(3000));
             } catch (InterruptedException iex) {
                 iex.printStackTrace();
             }

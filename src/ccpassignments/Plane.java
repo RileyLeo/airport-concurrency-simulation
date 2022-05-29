@@ -55,73 +55,63 @@ public class Plane extends Thread {
 
     @Override
     public void run() {
-//        System.out.println(this.planeName + ": Landing timer start");
-//        this.landingStartTime = new Date().getTime();
+
         requestForLanding();
-//        this.landingEndTime = new Date().getTime();
-//        this.landingExecutionTime = (float) (this.landingEndTime - this.landingStartTime) / 1000;
-//        Report.landingWaitTime.set(this.index, this.landingExecutionTime);
-//        System.out.println(this.planeName + " landing wait time is " + this.landingExecutionTime);
 
         landingSequence();
 
-//        System.out.println(this.planeName + ": Airport timer start");
-//        this.airportStartTime = new Date().getTime();
         airportSequence();
-//        this.airportEndTime = new Date().getTime();
-//        this.airportExecutionTime = ((float) this.airportEndTime - (float) this.airportStartTime) / 1000;
-//        Report.airportOperationsTime.set(this.index, this.airportExecutionTime);
-//        System.out.println(this.planeName + " airport operation time is " + this.airportExecutionTime);
 
-//        System.out.println(this.planeName + ": Departure timer start");
-//        this.departureStartTime = new Date().getTime();
         requestForDeparture();
-//        this.departureEndTime = new Date().getTime();
-//        this.departureExecutionTime = ((float) this.departureEndTime - (float) this.departureStartTime) / 1000;
-//        Report.departureWaitTime.set(index, departureExecutionTime);
-//        System.out.println(this.planeName + " departure wait time is " + this.departureExecutionTime);
 
         departSequence();
+
     }
 
     private void requestForLanding() {
-        System.out.println(this.planeName + ": Landing timer start");
+//        System.out.println(this.planeName + ": Landing timer start");
         this.landingStartTime = new Date().getTime();
         System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " request for landing." + ANSI_RESET);
         atc.acquireGateAndRunway(this);
         this.landingEndTime = new Date().getTime();
         this.landingExecutionTime = this.landingEndTime - this.landingStartTime;
         Report.landingWaitTime.set(this.index, this.landingExecutionTime);
-        System.out.println(this.planeName + " landing wait time is " + this.landingExecutionTime);
+//        System.out.println(this.planeName + " landing wait time is " + this.landingExecutionTime);
     }
 
     private void requestForDeparture() {
-        System.out.println(this.planeName + ": Departure timer start");
+//        System.out.println(this.planeName + ": Departure timer start");
         this.departureStartTime = new Date().getTime();
         System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " request for departure." + ANSI_RESET);
         atc.acquireRunway(this);
         this.departureEndTime = new Date().getTime();
         this.departureExecutionTime = this.departureEndTime - this.departureStartTime;
         Report.departureWaitTime.set(index, departureExecutionTime);
-        System.out.println(this.planeName + " departure wait time is " + this.departureExecutionTime);
+//        System.out.println(this.planeName + " departure wait time is " + this.departureExecutionTime);
     }
 
     private void landingSequence() {
-        System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " Landing" + ANSI_RESET);
         try {
+            System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " landing" + ANSI_RESET);
             Thread.sleep(1000);
+            System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " landed on the runway!" + ANSI_RESET);
+            System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " is coasting to the gate now!" + ANSI_RESET);
+            Thread.sleep(1000);
+            System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " docked at Gate!" + ANSI_RESET);
+            atc.runway.release();
         } catch (InterruptedException ex) {
             Logger.getLogger(Plane.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " Landed and Docked at Gate!" + ANSI_RESET);
-        atc.runway.release();
     }
 
     private void departSequence() {
-        System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " Departing" + ANSI_RESET);
         try {
+            System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " coasting to runway." + ANSI_RESET);
             Thread.sleep(1000);
-            System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " Successfully departed" + ANSI_RESET);
+            System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " runway reached!" + ANSI_RESET);
+            System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " departing" + ANSI_RESET);
+            Thread.sleep(1000);
+            System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " successfully departed!" + ANSI_RESET);
             atc.gate.release();
             atc.runway.release();
         } catch (InterruptedException ex) {
@@ -132,7 +122,7 @@ public class Plane extends Thread {
     }
 
     private void airportSequence() {
-        System.out.println(this.planeName + ": Airport timer start");
+//        System.out.println(this.planeName + ": Airport timer start");
         this.airportStartTime = new Date().getTime();
         Passenger passenger = new Passenger(this);
         Thread threadPassenger = new Thread(passenger);
@@ -150,7 +140,7 @@ public class Plane extends Thread {
         this.airportEndTime = new Date().getTime();
         this.airportExecutionTime = this.airportEndTime - this.airportStartTime;
         Report.airportOperationsTime.set(this.index, this.airportExecutionTime);
-        System.out.println(this.planeName + " airport operation time is " + this.airportExecutionTime);
+//        System.out.println(this.planeName + " airport operation time is " + this.airportExecutionTime);
     }
 
     private void resupply() {

@@ -21,7 +21,7 @@ public class main {
         while (ATC.planeLeft != ATC.maxPlane){          
         }
         System.out.println("All planes have departed!");
-        Report.printReport();
+        Report.printReport(atc);
     }
     
 }

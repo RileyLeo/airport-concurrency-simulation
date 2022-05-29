@@ -12,7 +12,15 @@ public class Report {
     public static ArrayList<Integer> disembarkPassengerCount = new ArrayList<Integer>();
     public static ArrayList<Integer> embarkPassengerCount = new ArrayList<Integer>();
 
-    public static void printReport() {
+    public static void printReport(ATC atc) {
+        System.out.println("The number of empty gates:" + atc.gate.availablePermits());
+        if (atc.gate.availablePermits() < 2) {
+            System.out.println("What there are planes in the gates? How?");
+        } else if (atc.gate.availablePermits() > 2) {
+            System.out.println("When do we have more than 2 gates?!");
+        } else if (atc.gate.availablePermits() == 2) {
+            System.out.println("Nice, all 2 gates are empty.");
+        }
         float sum = 0;
         float average;
         System.out.println("=====================================================================================================================================");
