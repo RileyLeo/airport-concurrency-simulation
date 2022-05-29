@@ -49,6 +49,7 @@ public class Report {
         average = sum / departureWaitTime.size();
         System.out.println("Average Departure Wait Time:" + average);
         System.out.println("=====================================================================================================================================");
+        System.out.println("Stat Checker");
         for (int i = 0; i < ATC.maxPlane; i++) {
             System.out.println("=====================================================================================================================================");
             int number = i + 1;
