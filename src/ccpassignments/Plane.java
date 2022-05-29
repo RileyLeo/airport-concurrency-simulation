@@ -10,6 +10,7 @@ public class Plane extends Thread {
     private String planeName;
     public Boolean refueled = false;
     Date arrivalTime;
+    Date departureTime;
     ATC atc;
     public static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
     public static final String ANSI_RED_BACKGROUND = "\u001B[41m";
@@ -34,18 +35,62 @@ public class Plane extends Thread {
     public void setArrivalTime(Date arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
+    
+    public Date getDepartureTime() {
+        return departureTime;
+    }
 
+    public void setDepartureTime(Date departureTime) {
+        this.departureTime = departureTime;
+    }
+
+    @Override
     public void run() {
-        
+
         requestForLanding();
-        acuireResourceForLanding();
-        
+
         landingSequence();
-        
+
         airportSequence();
-        
+
+        requestForDeparture();
+
         departSequence();
-        
+
+    }
+
+    private void requestForLanding() {
+        System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " request for landing." + ANSI_RESET);
+        atc.acquireGateAndRunway(this);
+    }
+
+    private void requestForDeparture() {
+        System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " request for departure." + ANSI_RESET);
+        atc.acquireRunway(this);
+    }
+
+    private void landingSequence() {
+        System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " Landing" + ANSI_RESET);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Plane.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " Landed and Docked at Gate!" + ANSI_RESET);
+        atc.runway.release();
+    }
+
+    private void departSequence() {
+        System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " Departing" + ANSI_RESET);
+        try {
+            Thread.sleep(1000);
+            System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " Successfully departed" + ANSI_RESET);
+            atc.gate.release();
+            atc.runway.release();
+            this.setDepartureTime(new Date());
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Plane.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void airportSequence() {
@@ -62,42 +107,6 @@ public class Plane extends Thread {
         }
         while (refueled == false) {
         }
-    }
-
-    private void requestForLanding() {
-        System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " request for landing." + ANSI_RESET);
-        atc.addLanding(this);
-
-    }
-
-    private void acuireResourceForLanding() {
-        System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " Attempt to accquire a gate and runway." + ANSI_RESET);
-        atc.acquireGateAndRunway();
-    }
-
-    private void landingSequence() {
-        System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " Landing" + ANSI_RESET);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Plane.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " Landed and Docked at Gate!" + ANSI_RESET);
-        atc.runway.release();
-    }
-
-    private void departSequence() {
-        atc.acquireRunway(this);
-        System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " Departing" + ANSI_RESET);
-        try {
-            Thread.sleep(1000);
-            System.out.println(ANSI_CYAN_BACKGROUND + "Plane Thread: " + this.getPlaneName() + " Successfully departed" + ANSI_RESET);
-            atc.gate.release();
-            atc.runway.release();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Plane.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        ATC.planeLeft++;
     }
 
     private void resupply() {

@@ -55,7 +55,7 @@ public class RefuelTruck extends Thread {
             }
 
             try {
-                Thread.sleep(3000);
+                Thread.sleep(10000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(RefuelTruck.class.getName()).log(Level.SEVERE, null, ex);
             }
