@@ -8,7 +8,7 @@ public class Plane extends Thread {
 
     public int index;
     private String planeName;
-    public Boolean refueled = false;
+    public volatile Boolean refueled = false;
     Date arrivalTime;
     Date departureTime;
     ATC atc;
